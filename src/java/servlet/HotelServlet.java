@@ -5,6 +5,7 @@
  */
 package servlet;
 
+import hotel.HotelWS_Service;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -12,6 +13,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.ws.WebServiceRef;
 
 /**
  *
@@ -19,6 +21,8 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet(name = "HotelServlet", urlPatterns = {"/HotelServlet"})
 public class HotelServlet extends HttpServlet {
+    @WebServiceRef(wsdlLocation = "WEB-INF/wsdl/localhost_8080/AgenciaWS/HotelWS.wsdl")
+    private HotelWS_Service service;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -42,12 +46,18 @@ public class HotelServlet extends HttpServlet {
             out.println("<body>");
             out.println("<h1>Servlet HotelServlet at " + request.getContextPath() + "</h1>");
             /* Servlet per provar HotelWS */
-            int idHotel = 1;
-            int fecha = 6102015;
+            String p = request.getParameter("idHotel");
+            int idHotel = Integer.parseInt(p);
+            p = request.getParameter("fecha");
+            int fecha = Integer.parseInt(p);
             int lliures = 0;
             /* Crida a les operacions consulta i reserva */
+            consultaLibres(idHotel,fecha);
             out.println("Hi ha " +lliures+ " lliures");
+            reservaHabitacion(idHotel,fecha);
             out.println("S'ha reservat una habitacio despres de la consulta. Ara queden "+(lliures+1)+" lliures");
+            out.println("<br>");      
+            out.println("<br> <h3><a href=\"index.html\">Tornar al menu</a></h3>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -91,5 +101,19 @@ public class HotelServlet extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
+
+    private int consultaLibres(int idHotel, int fecha) {
+        // Note that the injected javax.xml.ws.Service reference as well as port objects are not thread safe.
+        // If the calling of port operations may lead to race condition some synchronization is required.
+        hotel.HotelWS port = service.getHotelWSPort();
+        return port.consultaLibres(idHotel, fecha);
+    }
+
+    private int reservaHabitacion(int idHotel, int fecha) {
+        // Note that the injected javax.xml.ws.Service reference as well as port objects are not thread safe.
+        // If the calling of port operations may lead to race condition some synchronization is required.
+        hotel.HotelWS port = service.getHotelWSPort();
+        return port.reservaHabitacion(idHotel, fecha);
+    }
 
 }

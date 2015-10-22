@@ -12,6 +12,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.ws.WebServiceRef;
+import vuelo.VueloWS_Service;
 
 /**
  *
@@ -19,6 +21,8 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet(name = "VueloServlet", urlPatterns = {"/VueloServlet"})
 public class VueloServlet extends HttpServlet {
+    @WebServiceRef(wsdlLocation = "WEB-INF/wsdl/localhost_8080/AgenciaWS/VueloWS.wsdl")
+    private VueloWS_Service service;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -42,12 +46,18 @@ public class VueloServlet extends HttpServlet {
             out.println("<body>");
             out.println("<h1>Servlet VueloServlet at " + request.getContextPath() + "</h1>");
             /* Servlet per provar VueloWS */
-            int idVuelo = 1;
-            int fecha = 6102015;
+            String p = request.getParameter("idVuelo");
+            int idVuelo = Integer.parseInt(p);
+            p = request.getParameter("fecha");
+            int fecha = Integer.parseInt(p);
             int lliures = 0;
             /* Crida a les operacions consulta i reserva */
+            consultaLibres(idVuelo,fecha);
             out.println("Hi ha " +lliures+ " lliures");
+            reservaPlaza(idVuelo,fecha);
             out.println("S'ha reservat un vol despres de la consulta. Ara queden "+(lliures+1)+" lliures");
+            out.println("<br>");      
+            out.println("<br> <h3><a href=\"index.html\">Tornar al menu</a></h3>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -91,5 +101,19 @@ public class VueloServlet extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
+
+    private int consultaLibres(int idVuelo, int fecha) {
+        // Note that the injected javax.xml.ws.Service reference as well as port objects are not thread safe.
+        // If the calling of port operations may lead to race condition some synchronization is required.
+        vuelo.VueloWS port = service.getVueloWSPort();
+        return port.consultaLibres(idVuelo, fecha);
+    }
+
+    private int reservaPlaza(int idVuelo, int fecha) {
+        // Note that the injected javax.xml.ws.Service reference as well as port objects are not thread safe.
+        // If the calling of port operations may lead to race condition some synchronization is required.
+        vuelo.VueloWS port = service.getVueloWSPort();
+        return port.reservaPlaza(idVuelo, fecha);
+    }
 
 }

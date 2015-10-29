@@ -52,10 +52,14 @@ public class HotelServlet extends HttpServlet {
             int fecha = Integer.parseInt(p);
             int lliures = 0;
             /* Crida a les operacions consulta i reserva */
-            consultaLibres(idHotel,fecha);
-            out.println("Hi ha " +lliures+ " lliures");
-            reservaHabitacion(idHotel,fecha);
-            out.println("S'ha reservat una habitacio despres de la consulta. Ara queden "+(lliures+1)+" lliures");
+            lliures = consultaLibres(idHotel,fecha);
+            out.println("Consulta de l'hotel "+idHotel+" "+fecha+": Hi ha " +lliures+ " lliures");
+            int ocupades = 0;
+            ocupades = reservaHabitacion(idHotel,fecha);
+            out.println("<br>");
+            out.println("-------------------------");
+            out.println("<br>");
+            out.println("S'ha reservat una habitacio despres de la consulta. Ara n'hi ha "+ocupades+" ocupades");
             out.println("<br>");      
             out.println("<br> <h3><a href=\"index.html\">Tornar al menu</a></h3>");
             out.println("</body>");
@@ -105,6 +109,7 @@ public class HotelServlet extends HttpServlet {
     private int consultaLibres(int idHotel, int fecha) {
         // Note that the injected javax.xml.ws.Service reference as well as port objects are not thread safe.
         // If the calling of port operations may lead to race condition some synchronization is required.
+        service = new hotel.HotelWS_Service();
         hotel.HotelWS port = service.getHotelWSPort();
         return port.consultaLibres(idHotel, fecha);
     }
@@ -112,6 +117,7 @@ public class HotelServlet extends HttpServlet {
     private int reservaHabitacion(int idHotel, int fecha) {
         // Note that the injected javax.xml.ws.Service reference as well as port objects are not thread safe.
         // If the calling of port operations may lead to race condition some synchronization is required.
+        service = new hotel.HotelWS_Service();
         hotel.HotelWS port = service.getHotelWSPort();
         return port.reservaHabitacion(idHotel, fecha);
     }

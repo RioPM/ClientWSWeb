@@ -52,10 +52,14 @@ public class VueloServlet extends HttpServlet {
             int fecha = Integer.parseInt(p);
             int lliures = 0;
             /* Crida a les operacions consulta i reserva */
-            consultaLibres(idVuelo,fecha);
-            out.println("Hi ha " +lliures+ " lliures");
-            reservaPlaza(idVuelo,fecha);
-            out.println("S'ha reservat un vol despres de la consulta. Ara queden "+(lliures+1)+" lliures");
+            lliures = consultaLibres(idVuelo,fecha);
+            out.println("Consulta del vol "+idVuelo+" "+fecha+": Hi ha " +lliures+ " lliures");
+            int ocupades = 0;
+            ocupades = reservaPlaza(idVuelo,fecha);
+            out.println("<br>");
+            out.println("-------------------------");
+            out.println("<br>");
+            out.println("S'ha reservat un vol despres de la consulta. Ara n'hi ha "+ocupades+" ocupades");
             out.println("<br>");      
             out.println("<br> <h3><a href=\"index.html\">Tornar al menu</a></h3>");
             out.println("</body>");
@@ -105,6 +109,7 @@ public class VueloServlet extends HttpServlet {
     private int consultaLibres(int idVuelo, int fecha) {
         // Note that the injected javax.xml.ws.Service reference as well as port objects are not thread safe.
         // If the calling of port operations may lead to race condition some synchronization is required.
+        service = new vuelo.VueloWS_Service();
         vuelo.VueloWS port = service.getVueloWSPort();
         return port.consultaLibres(idVuelo, fecha);
     }
@@ -112,6 +117,7 @@ public class VueloServlet extends HttpServlet {
     private int reservaPlaza(int idVuelo, int fecha) {
         // Note that the injected javax.xml.ws.Service reference as well as port objects are not thread safe.
         // If the calling of port operations may lead to race condition some synchronization is required.
+        service = new vuelo.VueloWS_Service();
         vuelo.VueloWS port = service.getVueloWSPort();
         return port.reservaPlaza(idVuelo, fecha);
     }

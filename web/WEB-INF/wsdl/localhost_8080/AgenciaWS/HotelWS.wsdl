@@ -4,6 +4,12 @@
 <xsd:import namespace="http://hotel/" schemaLocation="http://localhost:8080/AgenciaWS/HotelWS?xsd=1"/>
 </xsd:schema>
 </types>
+<message name="reserva_habitacion">
+<part name="parameters" element="tns:reserva_habitacion"/>
+</message>
+<message name="reserva_habitacionResponse">
+<part name="parameters" element="tns:reserva_habitacionResponse"/>
+</message>
 <message name="hello">
 <part name="parameters" element="tns:hello"/>
 </message>
@@ -22,13 +28,11 @@
 <message name="consulta_libresResponse">
 <part name="parameters" element="tns:consulta_libresResponse"/>
 </message>
-<message name="reserva_habitacion">
-<part name="parameters" element="tns:reserva_habitacion"/>
-</message>
-<message name="reserva_habitacionResponse">
-<part name="parameters" element="tns:reserva_habitacionResponse"/>
-</message>
 <portType name="HotelWS">
+<operation name="reserva_habitacion">
+<input wsam:Action="http://hotel/HotelWS/reserva_habitacionRequest" message="tns:reserva_habitacion"/>
+<output wsam:Action="http://hotel/HotelWS/reserva_habitacionResponse" message="tns:reserva_habitacionResponse"/>
+</operation>
 <operation name="hello">
 <input wsam:Action="http://hotel/HotelWS/helloRequest" message="tns:hello"/>
 <output wsam:Action="http://hotel/HotelWS/helloResponse" message="tns:helloResponse"/>
@@ -41,13 +45,18 @@
 <input wsam:Action="http://hotel/HotelWS/consulta_libresRequest" message="tns:consulta_libres"/>
 <output wsam:Action="http://hotel/HotelWS/consulta_libresResponse" message="tns:consulta_libresResponse"/>
 </operation>
-<operation name="reserva_habitacion">
-<input wsam:Action="http://hotel/HotelWS/reserva_habitacionRequest" message="tns:reserva_habitacion"/>
-<output wsam:Action="http://hotel/HotelWS/reserva_habitacionResponse" message="tns:reserva_habitacionResponse"/>
-</operation>
 </portType>
 <binding name="HotelWSPortBinding" type="tns:HotelWS">
 <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+<operation name="reserva_habitacion">
+<soap:operation soapAction=""/>
+<input>
+<soap:body use="literal"/>
+</input>
+<output>
+<soap:body use="literal"/>
+</output>
+</operation>
 <operation name="hello">
 <soap:operation soapAction=""/>
 <input>
@@ -67,15 +76,6 @@
 </output>
 </operation>
 <operation name="consulta_libres">
-<soap:operation soapAction=""/>
-<input>
-<soap:body use="literal"/>
-</input>
-<output>
-<soap:body use="literal"/>
-</output>
-</operation>
-<operation name="reserva_habitacion">
 <soap:operation soapAction=""/>
 <input>
 <soap:body use="literal"/>
